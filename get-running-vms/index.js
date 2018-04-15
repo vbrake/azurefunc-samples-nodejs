@@ -13,7 +13,7 @@ module.exports = function (context, req) {
         .then(function(credencials) {
             const computeClient = new computeManagementClient(credencials, subscriptionId);
 
-            computeClient.VirtualMachines.listAll()
+            computeClient.virtualMachines.listAll()
                 .then(function(res) {
                     status = 200;
                     body = JSON.stringify(res);
