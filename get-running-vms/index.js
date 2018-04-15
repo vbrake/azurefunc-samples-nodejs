@@ -6,7 +6,7 @@ function doneWithError(context, err) {
     context.log('err: ' + err);
     context.res = {
         status: 500,
-        body: JSON.stringify({'error': err})
+        body: {'error': err}
     };
     context.done();
 }
@@ -26,7 +26,7 @@ module.exports = function (context, req) {
                 .then(function(res) {
                     context.res = {
                         status: 200,
-                        body: JSON.stringify(res)
+                        body: res
                     };
                     context.done();
                 })
