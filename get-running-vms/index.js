@@ -31,7 +31,7 @@ module.exports = function (context, req) {
                         var result = {
                             id: item.id,
                             resourceGroup: resourceGroup,
-                            name: name
+                            name: item.name
                         }
                         return result;
                     });
