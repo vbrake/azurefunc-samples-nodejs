@@ -12,7 +12,7 @@ function doneWithError(context, err) {
 }
 
 function getVirtualMachinesRunning(context, credentials, subscriptionId) {
-    const computeClient = new computeManagementClient(credencials, subscriptionId);
+    const computeClient = new computeManagementClient(credentials, subscriptionId);
  
     getVirtualMachines(context, computeClient, (res) => {
         runningVms = getVirtualMachineStatuses(context, computeClient, res);
@@ -57,7 +57,7 @@ module.exports = function (context, req) {
     subscriptionId = process.env['subscriptionId'];
 
     msRestAzure.loginWithAppServiceMSI()
-        .then((credencials) => {
+        .then((credentials) => {
             getVirtualMachinesRunning(context, credentials, subscriptionId);
         })
         .catch((err) => {
