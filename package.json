@@ -1,0 +1,17 @@
+{
+  "name": "get-running-vms",
+  "version": "1.0.0",
+  "description": "A sample to get running vms with MSI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dzeyelid",
+  "license": "ISC",
+  "dependencies": {
+    "azure-arm-compute": "^5.1.1",
+    "ms-rest-azure": "^2.5.5",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
+  }
+}
