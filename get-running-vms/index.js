@@ -19,7 +19,7 @@ function done(context, status, body) {
     context.done();
 }
 
-async function getVirtualMachinesRunning(context, credentials, subscriptionId) {
+function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     return 'aaa';
     var computeClient = new computeManagementClient(credentials, subscriptionId);
 
