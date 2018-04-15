@@ -33,7 +33,7 @@ function getVirtualMachinesRunning(context, credentials, subscriptionId) {
 function getVirtualMachines(context, computeClient, callback) {
     context.log('getVirtualMachines');
     computeClient.virtualMachines.listAll()
-        .then((res) => callback)
+        .then(callback)
         .catch((err) => {
             doneWithError(context, err);
         });
