@@ -2,6 +2,15 @@ const rp = require('request-promise');
 const msRestAzure  = require("ms-rest-azure");
 const computeManagementClient = require('azure-arm-compute');
 
+function doneWithError(context, err) {
+    context.log('err: ' + err);
+    context.res = {
+        status: 500,
+        body: JSON.stringify({'error': err})
+    };
+    context.done();
+}
+
 module.exports = function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
     status = 400;
@@ -15,19 +24,17 @@ module.exports = function (context, req) {
 
             computeClient.virtualMachines.listAll()
                 .then(function(res) {
-                    status = 200;
-                    body = JSON.stringify(res);
+                    context.res = {
+                        status: 200,
+                        body: JSON.stringify(res)
+                    };
+                    context.done();
+                })
+                .catch(function(err) {
+                    doneWithError(context, err);
                 });
         })
         .catch(function(err) {
-            context.log('err: ' + err);
-            status = 500;
-            body = JSON.stringify({'error': err});
+            doneWithError(context, err);
         });
-
-    context.res = {
-        status: status,
-        body: body
-    }
-    context.done();
 };
