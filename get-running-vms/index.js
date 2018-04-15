@@ -24,10 +24,21 @@ module.exports = function (context, req) {
 
             computeClient.virtualMachines.listAll()
                 .then(function(res) {
-                    var ids = res.map(item => item.id);
+                    var vms = res.map(function(item) {
+                        var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
+                        filtered = filterRG.exec(item.id);
+                        var resourceGroup = filtered[1];
+                        var result = {
+                            id: item.id,
+                            resourceGroup: resourceGroup,
+                            name: name
+                        }
+                        return result;
+                    });
+
                     context.res = {
                         status: 200,
-                        body: ids
+                        body: vms
                     };
                     context.done();
                 })
