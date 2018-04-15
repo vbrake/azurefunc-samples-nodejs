@@ -54,12 +54,11 @@ module.exports = function (context, req) {
 
     msRestAzure.loginWithAppServiceMSI()
         .then(credentials => {
-            done(context, 200, 'test');
-            // return getVirtualMachinesRunning(context, credentials, subscriptionId);
+            return getVirtualMachinesRunning(context, credentials, subscriptionId);
         })
-        // .then(runningVms => {
-        //     done(context, 200, runningVms);
-        // })
+        .then(runningVms => {
+            done(context, 200, runningVms);
+        })
         .catch(err => {
             doneWithError(context, err);
         });
