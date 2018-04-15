@@ -19,39 +19,29 @@ function done(context, status, body) {
     context.done();
 }
 
-function getVirtualMachinesRunning(context, credentials, subscriptionId) {
+async function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
 
-    computeClient.virtualMachines.listAll()
-        .then(res => {
-            context.res = {status: 200, body: res};
-            context.done();
-            return;
-            // return getVirtualMachineStatuses(context, computeClient, res);
-        })
-        // .done(res => {
-        //     done(context, 200, res);
-        // })
-        .catch(err => {
-            doneWithError(context, err);
+    try {
+        let vms = await computeClient.virtualMachines.listAll();
+        var instanceViews = mvs.map(vm => {
+            var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
+            filtered = filterRG.exec(vm.id);
+            var resourceGroup = filtered[1];
+            result = {
+                resourceGroup: resourceGroup,
+                name: vm.name
+            }
+            return result;
+    
+            // yield instanceView = computeClient.virtualMachines.instanceView(resourceGroup, item.name);
+            // return instanceView;
         });
-}
-
-async function getVirtualMachineStatuses(context, computeClient, res) {
-    var vms = res.map(item => {
-        var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
-        filtered = filterRG.exec(item.id);
-        var resourceGroup = filtered[1];
-        result = {
-            resourceGroup: resourceGroup,
-            name: item.name
-        }
-        return result;
-
-        // yield instanceView = computeClient.virtualMachines.instanceView(resourceGroup, item.name);
-        // return instanceView;
-    });
-    return vms;
+        done(context, 200, instanceViews);
+    }
+    catch (err) {
+        doneWithError(context, err);
+    }
 }
 
 module.exports = function (context, req) {
