@@ -24,20 +24,21 @@ async function getVirtualMachinesRunning(context, credentials, subscriptionId) {
 
     try {
         let vms = await computeClient.virtualMachines.listAll();
-        var instanceViews = mvs.map(vm => {
-            var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
-            filtered = filterRG.exec(vm.id);
-            var resourceGroup = filtered[1];
-            result = {
-                resourceGroup: resourceGroup,
-                name: vm.name
-            }
-            return result;
+        done(context, 200, vms);
+        // var instanceViews = mvs.map(vm => {
+        //     var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
+        //     filtered = filterRG.exec(vm.id);
+        //     var resourceGroup = filtered[1];
+        //     result = {
+        //         resourceGroup: resourceGroup,
+        //         name: vm.name
+        //     }
+        //     return result;
     
-            // yield instanceView = computeClient.virtualMachines.instanceView(resourceGroup, item.name);
-            // return instanceView;
-        });
-        done(context, 200, instanceViews);
+        //     // yield instanceView = computeClient.virtualMachines.instanceView(resourceGroup, item.name);
+        //     // return instanceView;
+        // });
+        // done(context, 200, instanceViews);
     }
     catch (err) {
         doneWithError(context, err);
