@@ -32,8 +32,6 @@ function getVirtualMachines(context, computeClient, callback) {
     context.log('getVirtualMachines');
     computeClient.virtualMachines.listAll()
         .then((res) => {
-            done(context, 200, res);
-            return;
             callback(res);
         })
         .catch((err) => {
