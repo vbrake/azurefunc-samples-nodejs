@@ -25,7 +25,7 @@ module.exports = function (context, req) {
             body = JSON.stringify({'error': err});
         });
 
-    content.res = {
+    context.res = {
         status: status,
         body: body
     }
