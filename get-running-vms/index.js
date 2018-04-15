@@ -19,47 +19,32 @@ function done(context, status, body) {
     context.done();
 }
 
-function getVirtualMachinesRunning(context, credentials, subscriptionId) {
-    var computeClient = new computeManagementClient(credentials, subscriptionId);
-    return computeClient.virtualMachines.listAll();
-        // var instanceViews = mvs.map(vm => {
-        //     var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
-        //     filtered = filterRG.exec(vm.id);
-        //     var resourceGroup = filtered[1];
-        //     result = {
-        //         resourceGroup: resourceGroup,
-        //         name: vm.name
-        //     }
-        //     return result;
-    
-        //     // yield instanceView = computeClient.virtualMachines.instanceView(resourceGroup, item.name);
-        //     // return instanceView;
-        // });
-        // done(context, 200, instanceViews);
-        // return vms;
-    // }
-    // catch (err) {
-    //     doneWithError(context, err);
-    // }
+function getRunningMachines(computeClient, vms) {
+    return [computeClient, vms];
 }
 
 module.exports = function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
-    status = 400;
-    body = "Something is wrong. :(";
+    var status = 400;
+    var body = "Something is wrong. :(";
 
-    subscriptionId = process.env['subscriptionId'];
+    var subscriptionId = process.env['subscriptionId'];
+    var computeClient = null;
 
     msRestAzure.loginWithAppServiceMSI()
         .then(credentials => {
-            return getVirtualMachinesRunning(context, credentials, subscriptionId);
+            computeClient = new computeManagementClient(credentials, subscriptionId);
+            return computeClient.virtualMachines.listAll();
         })
-        .then(vms => {
-            done(context, 200, vms);
-        })
-        // .then(runningVms => {
-        //     done(context, 200, runningVms);
+        // .then(vms => {
+        //     done(context, 200, vms);
         // })
+        .then(vms => {
+            return getRunningMachines(computeClient, vms);
+        })
+        .then(runningVms => {
+            done(context, 200, runningVms);
+        })
         .catch(err => {
             doneWithError(context, err);
         });
