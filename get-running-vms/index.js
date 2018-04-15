@@ -14,10 +14,10 @@ module.exports = function (context, req) {
             const computeClient = new computeManagementClient(credencials, subscriptionId);
 
             computeClient.VirtualMachines.listAll()
-                .then(function(res)) {
+                .then(function(res) {
                     status = 200;
                     body = JSON.stringify(res);
-                }
+                });
         })
         .catch(function(err) {
             context.log('err: ' + err);
