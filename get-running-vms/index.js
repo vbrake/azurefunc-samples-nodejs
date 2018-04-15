@@ -23,15 +23,18 @@ function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
 
     computeClient.virtualMachines.listAll()
-    .then((res) => {
-        return getVirtualMachineStatuses(context, computeClient, res);
-    })
-    .done((res) => {
-        done(context, 200, res);
-    })
-    .catch(err => {
-        doneWithError(context, err);
-    });
+        .then(res => {
+            context.res = {status: 200, body: res};
+            context.done();
+            return;
+            // return getVirtualMachineStatuses(context, computeClient, res);
+        })
+        // .done(res => {
+        //     done(context, 200, res);
+        // })
+        .catch(err => {
+            doneWithError(context, err);
+        });
 }
 
 async function getVirtualMachineStatuses(context, computeClient, res) {
