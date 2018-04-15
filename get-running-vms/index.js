@@ -9,7 +9,7 @@ module.exports = function (context, req) {
 
     subscriptionId = process.env['subscriptionId'];
 
-    msRest.Azure.loginWithAppServiceMSI()
+    msRestAzure.loginWithAppServiceMSI()
         .then(function(credencials) {
             const computeClient = new computeManagementClient(credencials, subscriptionId);
 
