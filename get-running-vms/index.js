@@ -12,8 +12,8 @@ function doneWithError(context, err) {
 }
 
 function getVirtualMachinesRunning(context, credentials, subscriptionId) {
-    const computeClient = new computeManagementClient(credentials, subscriptionId);
- 
+    var computeClient = new computeManagementClient(credentials, subscriptionId);
+    context.log('getVirtualMachinesRunning');
     getVirtualMachines(context, computeClient, (res) => {
         runningVms = getVirtualMachineStatuses(context, computeClient, res);
         context.res = {
@@ -25,6 +25,7 @@ function getVirtualMachinesRunning(context, credentials, subscriptionId) {
 }
 
 function getVirtualMachines(context, computeClient, callback) {
+    context.log('getVirtualMachines');
     computeClient.virtualMachines.listAll()
         .then((res) => callback)
         .catch((err) => {
@@ -33,6 +34,7 @@ function getVirtualMachines(context, computeClient, callback) {
 }
 
 function getVirtualMachineStatuses(context, computeClient, vms) {
+    context.log('getVirtualMachineStatuses');
     var vms = res.map(function(item) {
         var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         filtered = filterRG.exec(item.id);
