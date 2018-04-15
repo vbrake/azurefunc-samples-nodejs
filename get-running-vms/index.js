@@ -19,11 +19,9 @@ function done(context, status, body) {
     context.done();
 }
 
-async function getVirtualMachinesRunning(context, credentials, subscriptionId) {
+function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
-
-    try {
-        let vms = await computeClient.virtualMachines.listAll();
+    return computeClient.virtualMachines.listAll();
         // var instanceViews = mvs.map(vm => {
         //     var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         //     filtered = filterRG.exec(vm.id);
@@ -38,11 +36,11 @@ async function getVirtualMachinesRunning(context, credentials, subscriptionId) {
         //     // return instanceView;
         // });
         // done(context, 200, instanceViews);
-        return vms;
-    }
-    catch (err) {
-        doneWithError(context, err);
-    }
+        // return vms;
+    // }
+    // catch (err) {
+    //     doneWithError(context, err);
+    // }
 }
 
 module.exports = function (context, req) {
@@ -56,9 +54,12 @@ module.exports = function (context, req) {
         .then(credentials => {
             return getVirtualMachinesRunning(context, credentials, subscriptionId);
         })
-        .then(runningVms => {
-            done(context, 200, runningVms);
+        .then(vms => {
+            done(context, 200, vms);
         })
+        // .then(runningVms => {
+        //     done(context, 200, runningVms);
+        // })
         .catch(err => {
             doneWithError(context, err);
         });
