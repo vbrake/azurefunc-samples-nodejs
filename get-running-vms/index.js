@@ -32,16 +32,21 @@ function getVirtualMachines(context, computeClient, callback) {
         });
 }
 
-async function getVirtualMachineStatuses(context, computeClient, vms) {
+function getVirtualMachineStatuses(context, computeClient, vms) {
     var vms = res.map(function(item) {
         var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         filtered = filterRG.exec(item.id);
         var resourceGroup = filtered[1];
+        result = {
+            resourceGroup: resourceGroup,
+            name: item.name
+        }
+        return result;
 
-        instanceView = await computeClient.virtualMachines.instanceView(resourceGroup, item.name)
-        return instanceView;
+        // instanceView = await computeClient.virtualMachines.instanceView(resourceGroup, item.name)
+        // return instanceView;
     });
-
+    return vms;
 }
 
 module.exports = function (context, req) {
