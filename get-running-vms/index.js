@@ -20,11 +20,11 @@ function done(context, status, body) {
 }
 
 async function getVirtualMachinesRunning(context, credentials, subscriptionId) {
+    return 'aaa';
     var computeClient = new computeManagementClient(credentials, subscriptionId);
 
     try {
         let vms = await computeClient.virtualMachines.listAll();
-        done(context, 200, vms);
         // var instanceViews = mvs.map(vm => {
         //     var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         //     filtered = filterRG.exec(vm.id);
@@ -54,7 +54,10 @@ module.exports = function (context, req) {
 
     msRestAzure.loginWithAppServiceMSI()
         .then(credentials => {
-            getVirtualMachinesRunning(context, credentials, subscriptionId);
+            return getVirtualMachinesRunning(context, credentials, subscriptionId);
+        })
+        .then(runningVms => {
+            done(context, 200, runningVms);
         })
         .catch(err => {
             doneWithError(context, err);
