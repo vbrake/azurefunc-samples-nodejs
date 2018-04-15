@@ -21,10 +21,10 @@ function done(context, status, body) {
 
 function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
-    context.log('getVirtualMachinesRunning');
+
     getVirtualMachines(context, computeClient, (res) => {
         runningVms = getVirtualMachineStatuses(context, computeClient, res);
-        done(context, 200, runnningVms);     
+        done(context, 200, runningVms);     
     });
 }
 
@@ -40,7 +40,6 @@ function getVirtualMachines(context, computeClient, callback) {
 }
 
 function getVirtualMachineStatuses(context, computeClient, res) {
-    context.log('getVirtualMachineStatuses');
     var vms = res.map((item) => {
         var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         filtered = filterRG.exec(item.id);
