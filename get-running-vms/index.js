@@ -24,9 +24,10 @@ module.exports = function (context, req) {
 
             computeClient.virtualMachines.listAll()
                 .then(function(res) {
+                    var ids = res.map(item => item.id);
                     context.res = {
                         status: 200,
-                        body: res
+                        body: ids
                     };
                     context.done();
                 })
