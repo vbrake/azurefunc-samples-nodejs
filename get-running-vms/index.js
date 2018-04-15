@@ -11,16 +11,20 @@ function doneWithError(context, err) {
     context.done();
 }
 
+function done(context, status, body) {
+    context.res = {
+        status: status,
+        body: body
+    };
+    context.done();
+}
+
 function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
     context.log('getVirtualMachinesRunning');
     getVirtualMachines(context, computeClient, (res) => {
         runningVms = getVirtualMachineStatuses(context, computeClient, res);
-        context.res = {
-                status: 200,
-                body: runnningVms
-            };
-        context.done();        
+        done(context, 200, runnningVms);     
     });
 }
 
@@ -28,6 +32,8 @@ function getVirtualMachines(context, computeClient, callback) {
     context.log('getVirtualMachines');
     computeClient.virtualMachines.listAll()
         .then((res) => {
+            done(context, 200, res);
+            return;
             callback(res);
         })
         .catch((err) => {
@@ -37,7 +43,7 @@ function getVirtualMachines(context, computeClient, callback) {
 
 function getVirtualMachineStatuses(context, computeClient, res) {
     context.log('getVirtualMachineStatuses');
-    var vms = res.map(function(item) {
+    var vms = res.map((item) => {
         var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         filtered = filterRG.exec(item.id);
         var resourceGroup = filtered[1];
