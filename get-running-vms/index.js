@@ -15,6 +15,12 @@ function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
     context.log('getVirtualMachinesRunning');
     getVirtualMachines(context, computeClient, (res) => {
+        context.res = {
+            status: 200,
+            body: res
+        };
+        context.done();
+        return;
         runningVms = getVirtualMachineStatuses(context, computeClient, res);
         context.res = {
                 status: 200,
