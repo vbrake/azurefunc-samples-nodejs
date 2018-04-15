@@ -22,22 +22,20 @@ function done(context, status, body) {
 function getVirtualMachinesRunning(context, credentials, subscriptionId) {
     var computeClient = new computeManagementClient(credentials, subscriptionId);
 
-    getVirtualMachines(context, computeClient, (res) => {
-        runningVms = getVirtualMachineStatuses(context, computeClient, res);
-        done(context, 200, runningVms);     
+    computeClient.virtualMachines.listAll()
+    .then((res) => {
+        return getVirtualMachineStatuses(context, computeClient, res);
+    })
+    .done((res) => {
+        done(context, 200, res);
+    })
+    .catch(err => {
+        doneWithError(context, err);
     });
 }
 
-function getVirtualMachines(context, computeClient, callback) {
-    computeClient.virtualMachines.listAll()
-        .then(callback)
-        .catch((err) => {
-            doneWithError(context, err);
-        });
-}
-
-function getVirtualMachineStatuses(context, computeClient, res) {
-    var vms = res.map((item) => {
+async function getVirtualMachineStatuses(context, computeClient, res) {
+    var vms = res.map(item => {
         var filterRG = new RegExp('\/subscriptions\/.+?\/resourceGroups\/(.+?)\/.*?$');
         filtered = filterRG.exec(item.id);
         var resourceGroup = filtered[1];
@@ -47,7 +45,7 @@ function getVirtualMachineStatuses(context, computeClient, res) {
         }
         return result;
 
-        // instanceView = await computeClient.virtualMachines.instanceView(resourceGroup, item.name)
+        // yield instanceView = computeClient.virtualMachines.instanceView(resourceGroup, item.name);
         // return instanceView;
     });
     return vms;
@@ -61,10 +59,10 @@ module.exports = function (context, req) {
     subscriptionId = process.env['subscriptionId'];
 
     msRestAzure.loginWithAppServiceMSI()
-        .then((credentials) => {
+        .then(credentials => {
             getVirtualMachinesRunning(context, credentials, subscriptionId);
         })
-        .catch((err) => {
+        .catch(err => {
             doneWithError(context, err);
         });
 };
