@@ -6,7 +6,7 @@ function doneWithError(context, err) {
     context.log('err: ' + err);
     context.res = {
         status: 500,
-        body: {'error': err}
+        body: {error: err}
     };
     context.done();
 }
@@ -17,10 +17,6 @@ function done(context, status, body) {
         body: body
     };
     context.done();
-}
-
-function getRunningMachines(computeClient, vms) {
-    return [computeClient, vms];
 }
 
 module.exports = function (context, req) {
@@ -36,14 +32,8 @@ module.exports = function (context, req) {
             computeClient = new computeManagementClient(credentials, subscriptionId);
             return computeClient.virtualMachines.listAll();
         })
-        // .then(vms => {
-        //     done(context, 200, vms);
-        // })
         .then(vms => {
-            return getRunningMachines(computeClient, vms);
-        })
-        .then(runningVms => {
-            done(context, 200, runningVms);
+            done(context, 200, {vms: vms});
         })
         .catch(err => {
             doneWithError(context, err);
