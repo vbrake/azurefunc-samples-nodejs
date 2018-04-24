@@ -1,5 +1,5 @@
 {
-  "name": "playground20180414func",
+  "name": "azurefunc-samples-nodejs",
   "version": "1.0.0",
   "description": "A sample to get running vms with MSI",
   "main": "index.js",
