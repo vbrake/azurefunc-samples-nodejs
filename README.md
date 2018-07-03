@@ -36,7 +36,7 @@ If you want to the function, you should do following instructions.
 ```bash
 # Set environment variables to the Azure Function
 SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-az functionapp config appsettings set --resource-group ${GROUP} --name ${GROUP}func --settings subscriptionId=${SUBSCRIPTION_ID} FUNCTIONS_EXTENSION_VERSION=beta
+az functionapp config appsettings set --resource-group ${GROUP} --name ${GROUP}func --settings AZURE_SUBSCRIPTION_ID=${SUBSCRIPTION_ID} FUNCTIONS_EXTENSION_VERSION=beta
 
 # Assign an identity to the Azure Function
 az functionapp identity assign --resource-group ${GROUP} --name ${GROUP}func
@@ -82,7 +82,7 @@ If you run this functions in your local, please setup the `.env` file. (But now 
 ```bash
 # Create .env file
 cp .env.sample .env
-sed -i -E "s/^(subscriptionId=).+?$/\1${SUBSCRIPTION_ID}/" .env
+sed -i -E "s/^(AZURE_SUBSCRIPTION_ID=).+?$/\1${SUBSCRIPTION_ID}/" .env
 ```
 
 How to develop new function on local machine
