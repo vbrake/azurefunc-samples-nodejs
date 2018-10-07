@@ -24,7 +24,7 @@ module.exports = function (context, req) {
     var status = 400;
     var body = "Something is wrong. :(";
 
-    var subscriptionId = process.env['subscriptionId'];
+    var subscriptionId = process.env['AZURE_SUBSCRIPTION_ID'];
     var computeClient = null;
 
     msRestAzure.loginWithAppServiceMSI()
